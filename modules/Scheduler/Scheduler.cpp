@@ -24,7 +24,11 @@
 #include <nscapi/nscapi_settings_helper.hpp>
 #include <nscapi/nscapi_protobuf.hpp>
 #include <nscapi/nscapi_protobuf_nagios.hpp>
+#include <nscapi/nscapi_program_options.hpp>
 #include <nscapi/macros.hpp>
+
+#include <boost/program_options.hpp>
+
 
 namespace sh = nscapi::settings_helper;
 
@@ -134,19 +138,19 @@ void Scheduler::on_trace(const char* file, int line, std::string msg) {
 #include <nscapi/functions.hpp>
 
 
-bool Scheduler::handle_schedule(schedules::target_object item) {
+bool Scheduler::handle_schedule(const schedules::task_container &item) {
 	try {
 		std::string response;
 		nscapi::core_helper ch(get_core(), get_id());
-		if (!ch.simple_query(item->command.c_str(), item->arguments, response)) {
-			NSC_LOG_ERROR("Failed to execute: " + item->command);
-			if (item->channel.empty()) {
-				NSC_LOG_ERROR_WA("No channel specified for ", item->get_alias());
+		if (!ch.simple_query(item.command, item.arguments, response)) {
+			NSC_LOG_ERROR("Failed to execute: " + item.command);
+			if (item.channel.empty()) {
+				NSC_LOG_ERROR("No channel specified for " + item.alias);
 				return true;
 			}
-			nscapi::protobuf::functions::create_simple_submit_request(item->channel, item->command, NSCAPI::query_return_codes::returnUNKNOWN, "Command was not found: " + item->command, "", response);
+			nscapi::protobuf::functions::create_simple_submit_request(item.channel, item.command, NSCAPI::query_return_codes::returnUNKNOWN, "Command was not found: " + item.command, "", response);
 			std::string result;
-			get_core()->submit_message(item->channel, response, result);
+			get_core()->submit_message(item.channel, response, result);
 			return true;
 		}
 		Plugin::QueryResponseMessage resp_msg;
@@ -154,27 +158,27 @@ bool Scheduler::handle_schedule(schedules::target_object item) {
 		Plugin::QueryResponseMessage resp_msg_send;
 		resp_msg_send.mutable_header()->CopyFrom(resp_msg.header());
 		BOOST_FOREACH(const Plugin::QueryResponseMessage::Response &p, resp_msg.payload()) {
-			if (nscapi::report::matches(item->report, nscapi::protobuf::functions::gbp_to_nagios_status(p.result())))
+			if (nscapi::report::matches(item.report, nscapi::protobuf::functions::gbp_to_nagios_status(p.result())))
 				resp_msg_send.add_payload()->CopyFrom(p);
 		}
 		if (resp_msg_send.payload_size() > 0) {
-			if (item->channel.empty()) {
-				NSC_LOG_ERROR_STD("No channel specified for " + item->get_alias() + " mssage will not be sent.");
+			if (item.channel.empty()) {
+				NSC_LOG_ERROR_STD("No channel specified for " + item.alias + " mssage will not be sent.");
 				return true;
 			}
-			nscapi::protobuf::functions::make_submit_from_query(response, item->channel, item->get_alias(), item->target_id, item->source_id);
+			nscapi::protobuf::functions::make_submit_from_query(response, item.channel, item.alias, item.target_id, item.source_id);
 			std::string result;
-			if (!get_core()->submit_message(item->channel, response, result)) {
-				NSC_LOG_ERROR_STD("Failed to submit: " + item->get_alias());
+			if (!get_core()->submit_message(item.channel, response, result)) {
+				NSC_LOG_ERROR_STD("Failed to submit: " + item.alias);
 				return true;
 			}
 			std::string error;
 			if (!nscapi::protobuf::functions::parse_simple_submit_response(result, error)) {
-				NSC_LOG_ERROR_STD("Failed to submit " + item->get_alias() + ": " + error);
+				NSC_LOG_ERROR_STD("Failed to submit " + item.alias + ": " + error);
 				return true;
 			}
 		} else {
-			NSC_DEBUG_MSG("Filter not matched for: " + item->get_alias() + " so nothing is reported");
+			NSC_DEBUG_MSG("Filter not matched for: " + item.alias + " so nothing is reported");
 		}
 		return true;
 	} catch (nsclient::nsclient_exception &e) {
@@ -184,7 +188,7 @@ bool Scheduler::handle_schedule(schedules::target_object item) {
 		NSC_LOG_ERROR_EXR("Exception: ", e);
 		return false;
 	} catch (...) {
-		NSC_LOG_ERROR_EX(item->get_alias());
+		NSC_LOG_ERROR_EX(item.alias);
 		return false;
 	}
 }
@@ -219,4 +223,75 @@ void Scheduler::fetchMetrics(Plugin::MetricsMessage::Response *response) {
 		m->set_key("metrics.available");
 		m->mutable_value()->set_string_data("false");
 	}
+}
+
+bool Scheduler::on_cli_add(const Plugin::ExecuteRequestMessage_Request &request, Plugin::ExecuteResponseMessage_Response *response) {
+	namespace po = boost::program_options;
+	namespace pf = nscapi::protobuf::functions;
+	po::variables_map vm;
+	po::options_description desc;
+	std::string alias, command, interval;
+
+	desc.add_options()
+		("help", "Show help.")
+
+		("interval", po::value<std::string>(&interval)->required(),
+		"The interval")
+		("command", po::value<std::string>(&command)->required(),
+		"The command")
+		("alias", po::value<std::string>(&alias)->required(),
+		"The alias")
+		;
+
+	try {
+		nscapi::program_options::basic_command_line_parser cmd(request);
+		cmd.options(desc);
+
+		po::parsed_options parsed = cmd.run();
+		po::store(parsed, vm);
+		po::notify(vm);
+
+		if (vm.count("help")) {
+			nscapi::protobuf::functions::set_response_good(*response, nscapi::program_options::help(desc));
+			return true;
+		}
+
+		std::list<std::string> args;
+		schedules::task_container c(0, alias, command, args, "op5");
+		scheduler_.add_task(c, interval);
+
+		return true;
+	} catch (const std::exception &e) {
+		nscapi::program_options::invalid_syntax(desc, request.command(), "Invalid command line: " + utf8::utf8_from_native(e.what()), *response);
+		return true;
+	} catch (...) {
+		nscapi::program_options::invalid_syntax(desc, request.command(), "Unknown exception", *response);
+		return true;
+	}
+
+}
+
+bool Scheduler::commandLineExec(const int target_mode, const Plugin::ExecuteRequestMessage::Request &request, Plugin::ExecuteResponseMessage::Response *response, const Plugin::ExecuteRequestMessage &request_message) {
+	std::string command = request.command();
+	if (command.empty() && target_mode == NSCAPI::target_module && request.arguments_size() > 0)
+		command = request.arguments(0);
+	else if (command.empty() && target_mode == NSCAPI::target_module)
+		command = "help";
+	try {
+		if (command == "help") {
+			nscapi::protobuf::functions::set_response_bad(*response, "Usage: nscp scheduler [add] --help");
+		} else {
+			if (command == "add") {
+				on_cli_add(request, response);
+				return true;
+			}
+			return false;
+		}
+	} catch (const std::exception &e) {
+		nscapi::protobuf::functions::set_response_bad(*response, "Error: " + utf8::utf8_from_native(e.what()));
+	} catch (...) {
+		nscapi::protobuf::functions::set_response_bad(*response, "Error: ");
+	}
+	return false;
+
 }

@@ -181,25 +181,95 @@ namespace schedules {
 	};
 
 
+	struct task_container {
+
+		task_container(unsigned int id, std::string alias, std::string command, std::list<std::string> arguments, std::string channel, unsigned int report, std::string source_id, std::string target_id)
+			: id(id)
+			, alias(alias)
+			, command(command)
+			, arguments(arguments)
+			, channel(channel)
+			, report(report)
+			, source_id(source_id)
+			, target_id(target_id)
+			{}
+		task_container(unsigned int id, std::string alias, std::string command, std::list<std::string> arguments, std::string channel)
+			: id(id)
+			, alias(alias)
+			, command(command)
+			, arguments(arguments)
+			, channel(channel)
+			, report(0)
+		{}
+		task_container()
+			: id(0)
+			, report(0) {}
+		task_container(const task_container& other)
+			: id(other.id)
+			, alias(other.alias)
+			, command(other.command)
+			, arguments(other.arguments)
+			, channel(other.channel)
+			, report(other.report)
+			, source_id(other.source_id)
+			, target_id(other.target_id)
+		{}
+		task_container& operator= (const task_container& other) {
+			id = other.id;
+			alias = other.alias;
+			command = other.command;
+			arguments = other.arguments;
+			channel = other.channel;
+			report = other.report;
+			source_id = other.source_id;
+			target_id = other.target_id;
+		}
+
+
+		std::string to_string() const {
+			std::stringstream ss;
+			ss << alias << "[" << id << "] = "
+				<< ", command: " << command
+				<< ", channel: " << channel
+				<< ", source_id: " << source_id
+				<< ", target_id: " << target_id;
+			ss << "}";
+			return ss.str();
+		}
+
+		unsigned int id;
+		std::string alias;
+
+		// Schedule keys
+		std::string command;
+		std::list<std::string> arguments;
+		std::string channel;
+		unsigned int report;
+		std::string source_id;
+		std::string target_id;
+
+	};
+
+
 	typedef boost::optional<schedule_object> optional_target_object;
 	typedef boost::shared_ptr<schedule_object> target_object;
 
 	typedef nscapi::settings_objects::object_handler<schedule_object> schedule_handler;
 
 	struct task_handler {
-		virtual bool handle_schedule(target_object task) = 0;
+		virtual bool handle_schedule(const schedules::task_container &item) = 0;
 		virtual void on_error(const char* file, int line, std::string error) = 0;
 		virtual void on_trace(const char* file, int line, std::string error) = 0;
 
 	};
 
 	struct scheduler : public simple_scheduler::handler {
-		typedef boost::unordered_map<int, target_object> metadata_map;
+		typedef boost::unordered_map<int, task_container> metadata_map;
 		metadata_map metadata;
 		simple_scheduler::scheduler tasks;
 		task_handler *handler_;
 
-		target_object get(int id);
+		const task_container& get(int id);
 
 		void start();
 		void stop();
@@ -224,6 +294,7 @@ namespace schedules {
 		}
 
 		void add_task(const target_object target);
+		void add_task(task_container& task, std::string interval);
 
 		bool handle_schedule(simple_scheduler::task item) {
 			task_handler *tmp = handler_;

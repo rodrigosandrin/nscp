@@ -21,7 +21,7 @@
 
 namespace schedules {
 
-	target_object scheduler::get(int id) {
+	const task_container& scheduler::get(int id) {
 		boost::mutex::scoped_lock l(tasks.get_mutex());
 		return metadata[id];
 	}
@@ -58,9 +58,17 @@ namespace schedules {
 			id = tasks.add_task(target->get_alias(), cron_parser::parse(*target->schedule));
 		else
 			id = tasks.add_task(target->get_alias(), parse_interval("5m"), 0.1);
+		task_container task(id, target->get_alias(), target->command, target->arguments, target->channel, target->report, target->source_id, target->target_id);
 		{
 			boost::mutex::scoped_lock l(tasks.get_mutex());
-			metadata[id] = target;
+			metadata[id] = task;
+		}
+	}
+	void scheduler::add_task(task_container& task, std::string interval) {
+		task.id = tasks.add_task(task.alias, parse_interval(interval), 0.1);
+		{
+			boost::mutex::scoped_lock l(tasks.get_mutex());
+			metadata[task.id] = task;
 		}
 	}
 

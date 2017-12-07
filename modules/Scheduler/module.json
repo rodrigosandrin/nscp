@@ -8,6 +8,8 @@
 		"reload"		: true
 	},
 
+	"command line exec" : true,
+
 	"metrics" : "produce"
 
 }

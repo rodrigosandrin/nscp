@@ -17,9 +17,13 @@
  * along with NSClient++.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <nscapi/nscapi_plugin_impl.hpp>
-#include <scheduler/simple_scheduler.hpp>
 #include "schedules_handler.hpp"
+
+#include <scheduler/simple_scheduler.hpp>
+
+#include <nscapi/nscapi_plugin_impl.hpp>
+#include <nscapi/nscapi_protobuf.hpp>
+
 
 typedef schedules::schedule_handler::object_instance schedule_instance;
 class Scheduler : public schedules::task_handler, public nscapi::impl::simple_plugin {
@@ -42,9 +46,14 @@ public:
 	// Metrics
 	void fetchMetrics(Plugin::MetricsMessage_Response *response);
 
+	bool commandLineExec(const int target_mode, const Plugin::ExecuteRequestMessage::Request &request, Plugin::ExecuteResponseMessage::Response *response, const Plugin::ExecuteRequestMessage &request_message);
+
 	void add_schedule(std::string alias, std::string command);
-	bool handle_schedule(schedules::target_object task);
+	bool handle_schedule(const schedules::task_container &item);
 
 	void on_error(const char* file, int line, std::string error);
 	void on_trace(const char* file, int line, std::string error);
+
+
+	bool on_cli_add(const Plugin::ExecuteRequestMessage_Request &request, Plugin::ExecuteResponseMessage_Response *response);
 };
