@@ -11,7 +11,7 @@ A list of all available queries (check commands)
 | Command                               | Description                              |
 |---------------------------------------|------------------------------------------|
 | [check_memory](#check_memory)         | Check free/used memory on the system.    |
-| [check_os_version](#check_os_version) | Check the version of the underlaying OS. |
+| [check_os_version](#check_os_version) | Check the version of the underlying OS. |
 | [check_uptime](#check_uptime)         | Check time since last server re-boot.    |
 
 
@@ -141,7 +141,7 @@ If anything matches this filter the return status will be escalated to warning.
 
 
 
-*Deafult Value:* | `used > 80%`
+*Default Value:* | `used > 80%`
 
 
 
@@ -153,7 +153,7 @@ If anything matches this filter the return status will be escalated to critical.
 
 
 
-*Deafult Value:* | `used > 90%`
+*Default Value:* | `used > 90%`
 
 
 
@@ -175,7 +175,7 @@ Return status to use when nothing matched filter.
 If no filter is specified this will never happen unless the file is empty.
 
 
-*Deafult Value:* | `ignored`
+*Default Value:* | `ignored`
 
 
 
@@ -194,10 +194,10 @@ TODO: obj ( key: value; key: value) obj (key:valuer;key:value)
 
 Top level syntax.
 Used to format the message to return can include text as well as special keywords which will include information from the checks.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${status}: ${list}`
+*Default Value:* | `${status}: ${list}`
 
 
 
@@ -228,10 +228,10 @@ DEPRECATED! This is the syntax for when nothing matches the filter.
 Detail level syntax.
 Used to format each resulting item in the message.
 %(list) will be replaced with all the items formated by this syntax string in the top-syntax.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${type} = ${used}`
+*Default Value:* | `${type} = ${used}`
 
 
 
@@ -242,7 +242,7 @@ Performance alias syntax.
 This is the syntax for the base names of the performance data.
 
 
-*Deafult Value:* | `${type}`
+*Default Value:* | `${type}`
 
 
 
@@ -274,7 +274,7 @@ This is the syntax for the base names of the performance data.
 
 ### check_os_version
 
-Check the version of the underlaying OS.
+Check the version of the underlying OS.
 
 
 * [Command-line Arguments](#check_os_version_options)
@@ -350,7 +350,7 @@ If anything matches this filter the return status will be escalated to warning.
 
 
 
-*Deafult Value:* | `version > 50`
+*Default Value:* | `version > 50`
 
 
 
@@ -362,7 +362,7 @@ If anything matches this filter the return status will be escalated to critical.
 
 
 
-*Deafult Value:* | `version > 50`
+*Default Value:* | `version > 50`
 
 
 
@@ -384,7 +384,7 @@ Return status to use when nothing matched filter.
 If no filter is specified this will never happen unless the file is empty.
 
 
-*Deafult Value:* | `ignored`
+*Default Value:* | `ignored`
 
 
 
@@ -403,10 +403,10 @@ TODO: obj ( key: value; key: value) obj (key:valuer;key:value)
 
 Top level syntax.
 Used to format the message to return can include text as well as special keywords which will include information from the checks.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${status}: ${list}`
+*Default Value:* | `${status}: ${list}`
 
 
 
@@ -437,10 +437,10 @@ DEPRECATED! This is the syntax for when nothing matches the filter.
 Detail level syntax.
 Used to format each resulting item in the message.
 %(list) will be replaced with all the items formated by this syntax string in the top-syntax.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${version} (${major}.${minor}.${build})`
+*Default Value:* | `${version} (${major}.${minor}.${build})`
 
 
 
@@ -451,7 +451,7 @@ Performance alias syntax.
 This is the syntax for the base names of the performance data.
 
 
-*Deafult Value:* | `version`
+*Default Value:* | `version`
 
 
 
@@ -562,7 +562,7 @@ If anything matches this filter the return status will be escalated to warning.
 
 
 
-*Deafult Value:* | `uptime < 2d`
+*Default Value:* | `uptime < 2d`
 
 
 
@@ -574,7 +574,7 @@ If anything matches this filter the return status will be escalated to critical.
 
 
 
-*Deafult Value:* | `uptime < 1d`
+*Default Value:* | `uptime < 1d`
 
 
 
@@ -596,7 +596,7 @@ Return status to use when nothing matched filter.
 If no filter is specified this will never happen unless the file is empty.
 
 
-*Deafult Value:* | `ignored`
+*Default Value:* | `ignored`
 
 
 
@@ -615,10 +615,10 @@ TODO: obj ( key: value; key: value) obj (key:valuer;key:value)
 
 Top level syntax.
 Used to format the message to return can include text as well as special keywords which will include information from the checks.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${status}: ${list}`
+*Default Value:* | `${status}: ${list}`
 
 
 
@@ -649,10 +649,10 @@ DEPRECATED! This is the syntax for when nothing matches the filter.
 Detail level syntax.
 Used to format each resulting item in the message.
 %(list) will be replaced with all the items formated by this syntax string in the top-syntax.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `uptime: ${uptime}h, boot: ${boot} (UTC)`
+*Default Value:* | `uptime: ${uptime}h, boot: ${boot} (UTC)`
 
 
 
@@ -663,7 +663,7 @@ Performance alias syntax.
 This is the syntax for the base names of the performance data.
 
 
-*Deafult Value:* | `uptime`
+*Default Value:* | `uptime`
 
 
 

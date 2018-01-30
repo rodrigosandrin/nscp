@@ -1,6 +1,6 @@
 # CheckNSCP
 
-Use this module to check the healt and status of NSClient++ it self
+Use this module to check the health and status of NSClient++ it self
 
 
 
@@ -10,7 +10,7 @@ A list of all available queries (check commands)
 
 | Command                                   | Description                                    |
 |-------------------------------------------|------------------------------------------------|
-| [check_nscp](#check_nscp)                 | Check the internal healt of NSClient++.        |
+| [check_nscp](#check_nscp)                 | Check the internal health of NSClient++.        |
 | [check_nscp_version](#check_nscp_version) | Check the version of NSClient++ which is used. |
 
 
@@ -25,7 +25,7 @@ A quick reference for all available queries (check commands) in the CheckNSCP mo
 
 ### check_nscp
 
-Check the internal healt of NSClient++.
+Check the internal health of NSClient++.
 
 
 * [Command-line Arguments](#check_nscp_options)
@@ -166,7 +166,7 @@ Return status to use when nothing matched filter.
 If no filter is specified this will never happen unless the file is empty.
 
 
-*Deafult Value:* | `ignored`
+*Default Value:* | `ignored`
 
 
 
@@ -185,10 +185,10 @@ TODO: obj ( key: value; key: value) obj (key:valuer;key:value)
 
 Top level syntax.
 Used to format the message to return can include text as well as special keywords which will include information from the checks.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${status}: ${list}`
+*Default Value:* | `${status}: ${list}`
 
 
 
@@ -219,10 +219,10 @@ DEPRECATED! This is the syntax for when nothing matches the filter.
 Detail level syntax.
 Used to format each resulting item in the message.
 %(list) will be replaced with all the items formated by this syntax string in the top-syntax.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${release}.${major}.${minor}.${build} (${date})`
+*Default Value:* | `${release}.${major}.${minor}.${build} (${date})`
 
 
 
@@ -233,7 +233,7 @@ Performance alias syntax.
 This is the syntax for the base names of the performance data.
 
 
-*Deafult Value:* | `version`
+*Default Value:* | `version`
 
 
 

@@ -126,7 +126,7 @@ Interesting items are items which will be included in the check.
 They do not denote warning or critical state instead it defines which items are relevant and you can remove unwanted items.
 
 
-*Deafult Value:* | `enabled = 1`
+*Default Value:* | `enabled = 1`
 
 
 
@@ -138,7 +138,7 @@ If anything matches this filter the return status will be escalated to warning.
 
 
 
-*Deafult Value:* | `exit_code != 0`
+*Default Value:* | `exit_code != 0`
 
 
 
@@ -150,7 +150,7 @@ If anything matches this filter the return status will be escalated to critical.
 
 
 
-*Deafult Value:* | `exit_code < 0`
+*Default Value:* | `exit_code < 0`
 
 
 
@@ -172,7 +172,7 @@ Return status to use when nothing matched filter.
 If no filter is specified this will never happen unless the file is empty.
 
 
-*Deafult Value:* | `warning`
+*Default Value:* | `warning`
 
 
 
@@ -191,10 +191,10 @@ TODO: obj ( key: value; key: value) obj (key:valuer;key:value)
 
 Top level syntax.
 Used to format the message to return can include text as well as special keywords which will include information from the checks.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${status}: ${problem_list}`
+*Default Value:* | `${status}: ${problem_list}`
 
 
 
@@ -206,7 +206,7 @@ DEPRECATED! This is the syntax for when an ok result is returned.
 This value will not be used if your syntax contains %(list) or %(count).
 
 
-*Deafult Value:* | `%(status): All tasks are ok`
+*Default Value:* | `%(status): All tasks are ok`
 
 
 
@@ -217,7 +217,7 @@ Empty syntax.
 DEPRECATED! This is the syntax for when nothing matches the filter.
 
 
-*Deafult Value:* | `%(status): No tasks found`
+*Default Value:* | `%(status): No tasks found`
 
 
 
@@ -227,10 +227,10 @@ DEPRECATED! This is the syntax for when nothing matches the filter.
 Detail level syntax.
 Used to format each resulting item in the message.
 %(list) will be replaced with all the items formated by this syntax string in the top-syntax.
-To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to excpae on linux).
+To add a keyword to the message you can use two syntaxes either ${keyword} or %(keyword) (there is no difference between them apart from ${} can be difficult to escape on linux).
 
 
-*Deafult Value:* | `${folder}/${title}: ${exit_code} != 0`
+*Default Value:* | `${folder}/${title}: ${exit_code} != 0`
 
 
 
@@ -241,7 +241,7 @@ Performance alias syntax.
 This is the syntax for the base names of the performance data.
 
 
-*Deafult Value:* | `${title}`
+*Default Value:* | `${title}`
 
 
 

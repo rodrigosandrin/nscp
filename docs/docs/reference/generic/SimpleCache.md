@@ -97,7 +97,7 @@ Fetch results from the cache.
 The message to display when a message is not found
 
 
-*Deafult Value:* | `Entry not found`
+*Default Value:* | `Entry not found`
 
 
 
@@ -107,7 +107,7 @@ The message to display when a message is not found
 The return status to return when a message is not found
 
 
-*Deafult Value:* | `unknown`
+*Default Value:* | `unknown`
 
 
 
@@ -207,7 +207,7 @@ channel=CACHE
 **PRIMARY CACHE INDEX**
 
 Set this to the value you want to use as unique key for the cache.
-Can be any arbitrary string as well as include any of the following special keywords:${command} = The command name, ${host} the host, ${channel} the recieving channel, ${alias} the alias for the command, ${alias-or-command} = alias if set otherweise command, ${message} = the message data (no escape), ${result} = The result status (number).
+Can be any arbitrary string as well as include any of the following special keywords:${command} = The command name, ${host} the host, ${channel} the receiving channel, ${alias} the alias for the command, ${alias-or-command} = alias if set otherwise command, ${message} = the message data (no escape), ${result} = The result status (number).
 
 
 
