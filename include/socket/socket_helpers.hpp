@@ -142,10 +142,11 @@ namespace socket_helpers {
 		unsigned int timeout;
 		int retry;
 		bool reuse;
+		unsigned int con_timeout;
 		ssl_opts ssl;
 		allowed_hosts_manager allowed_hosts;
 
-		connection_info() : back_log(backlog_default), port_("0"), thread_pool_size(0), timeout(30), retry(2), reuse(true) {}
+		connection_info() : back_log(backlog_default), port_("0"), thread_pool_size(0), timeout(30), retry(2), reuse(true), con_timeout(-1) {}
 
 		connection_info(const connection_info &other)
 			: address(other.address)
@@ -155,6 +156,7 @@ namespace socket_helpers {
 			, timeout(other.timeout)
 			, retry(other.retry)
 			, reuse(other.reuse)
+			, con_timeout(other.con_timeout)
 			, ssl(other.ssl)
 			, allowed_hosts(other.allowed_hosts) {}
 		connection_info& operator=(const connection_info &other) {
@@ -165,6 +167,7 @@ namespace socket_helpers {
 			timeout = other.timeout;
 			retry = other.retry;
 			reuse = other.reuse;
+			con_timeout = other.con_timeout;
 			ssl = other.ssl;
 			allowed_hosts = other.allowed_hosts;
 			return *this;
@@ -179,6 +182,9 @@ namespace socket_helpers {
 		std::string get_address() const { return address; }
 		std::string get_endpoint_string() const {
 			return address + ":" + get_port();
+		}
+		unsigned int get_connection_timeout() const {
+			return con_timeout;
 		}
 		long get_ctx_opts();
 
